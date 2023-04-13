@@ -1,5 +1,7 @@
 ﻿# SCGraphTheory.AdjacencyList
 
+[![NuGet version (SCGraphTheory.AdjacencyList)](https://img.shields.io/nuget/v/SCGraphTheory.AdjacencyList.svg?style=flat-square)](https://www.nuget.org/packages/SCGraphTheory.AdjacencyList/) 
+
 The SCGraphTheory.AdjacencyList NuGet package contains a mutable adjacency list graph implementation that implements the interfaces defined in the [SCGraphTheory.Abstractions](abstractions) package, and can thus work with other packages that also use this abstraction - such as [SCGraphTheory.Search](search).
 
 ## Usage Examples

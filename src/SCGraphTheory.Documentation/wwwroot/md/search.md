@@ -1,5 +1,7 @@
 ﻿# SCGraphTheory.Search
 
+[![NuGet version (SCGraphTheory.Search)](https://img.shields.io/nuget/v/SCGraphTheory.Search.svg?style=flat-square)](https://www.nuget.org/packages/SCGraphTheory.Search/) 
+
 The SCGraphTheory.Search NuGet package contains graph search algorithms that work against any graph type implementing the interfaces defined in the [SCGraphTheory.Abstractions](abstractions) package.
 
 ## Classic search algorithms
