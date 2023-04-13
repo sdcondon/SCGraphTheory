@@ -1,6 +1,6 @@
 ﻿# SCGraphTheory.Abstractions
 
-The SCGraphTheory.Abstractions NuGet package contains interfaces for the three fundamental elements of graph theory - [IGraph<TNode,TEdge>](/src/Abstractions/IGraph{TNode,TEdge}.cs), [INode<TNode,TEdge>](/src/Abstractions/INode{TNode,TEdge}.cs) and [IEdge<TNode,TEdge>](/src/Abstractions/IEdge{TNode,TEdge}.cs) - to allow for graph algorithms that do not depend on a particular graph representation.
+The SCGraphTheory.Abstractions NuGet package contains interfaces for the three fundamental elements of graph theory - [IGraph<TNode,TEdge>](https://github.com/sdcondon/SCGraphTheory.Abstractions/blob/main/src/Abstractions/IGraph{TNode,TEdge}.cs), [INode<TNode,TEdge>](https://github.com/sdcondon/SCGraphTheory.Abstractions/blob/main/src/Abstractions/INode{TNode,TEdge}.cs) and [IEdge<TNode,TEdge>](https://github.com/sdcondon/SCGraphTheory.Abstractions/blob/main/src/Abstractions/IEdge{TNode,TEdge}.cs) - to allow for graph algorithms that do not depend on a particular graph representation.
 
 Example implementation and usage can be found in the separate [SCGraphTheory.AdjacencyList](https://github.com/sdcondon/SCGraphTheory.AdjacencyList) and [SCGraphTheory.Search](https://github.com/sdcondon/SCGraphTheory.Search) repositories, respectively.
 Additional (test-focused) implementation examples can be found in the [TestGraphs library](https://github.com/sdcondon/SCGraphTheory.Search/tree/main/src/Search.TestGraphs) in SCGraphTheory.Search.

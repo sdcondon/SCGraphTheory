@@ -4,7 +4,7 @@ The SCGraphTheory.Search NuGet package contains graph search algorithms that wor
 
 ## Classic search algorithms
 
-The `Classic` namespace contains (single-source) implementations of the breadth-first, depth-first (including limited and iterative deepening variants), Dijkstra, and A-star search algorithms, all conforming to a common interface - [ISearch<TNode,TEdge>](/src/Search/Classic/ISearch{TNode,TEdge}.cs).
+The `Classic` namespace contains (single-source) implementations of the breadth-first, depth-first (including limited and iterative deepening variants), Dijkstra, and A-star search algorithms, all conforming to a common interface - [ISearch<TNode,TEdge>](https://github.com/sdcondon/SCGraphTheory.Search/blob/main/src/Search/Classic/ISearch{TNode,TEdge}.cs).
 They should be fairly intuitive to use.
 Here are some example instantiations:
 
@@ -29,7 +29,7 @@ var aStar = new AStarSearch<MyNodeType, MyEdgeType>(
     getEstimatedCostToTarget: n => EuclideanDistance(n.Coords, targetCoords));
 ```
 
-Searches are executed step-by-step via the `NextStep()` method of the [ISearch<TNode,TEdge>](/src/Search/Classic/ISearch{TNode,TEdge}.cs) interface. This (as opposed to having to execute a search all the way to completion) is to maximise the flexibility with which potentially expensive searches can be executed. A `Complete()` extension method is defined though; which continuously calls `NextStep()` until the search completes.
+Searches are executed step-by-step via the `NextStep()` method of the [ISearch<TNode,TEdge>](https://github.com/sdcondon/SCGraphTheory.Search/blob/main/src/Search/Classic/ISearch{TNode,TEdge}.cs) interface. This (as opposed to having to execute a search all the way to completion) is to maximise the flexibility with which potentially expensive searches can be executed. A `Complete()` extension method is defined though; which continuously calls `NextStep()` until the search completes.
 
 Notes:
 - All search algorithms expose details of visited edges via the `Visited` property.
@@ -64,7 +64,7 @@ The `AndOr` namespace contains implementations (well, just a DFS for now) of sea
 The overall approach taken here is that a delegate is used to identify edges that actually represent a set of conjoined "and" edges (_all_ of which must ultimately lead to a target node in a search solution).
 The actual edges are represented by the outbound edges of the node that the collection edge connects to.
 Another way of looking at this is that we divide our graph into "or" nodes and "and" nodes.
-See the [Specialized.AndOr namespace](/src/Search.TestGraphs/Specialized/AndOr) in the test graphs project for a couple of and-or graph examples.
+See the [Specialized.AndOr namespace](https://github.com/sdcondon/SCGraphTheory.Search/blob/main/src/Search.TestGraphs/Specialized/AndOr) in the test graphs project for a couple of and-or graph examples.
 
 ```csharp
 var andOrDFS = new AndOrDFS<MyBaseNodeType, MyBaseEdgeType>(
