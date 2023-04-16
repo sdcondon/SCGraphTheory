@@ -1,6 +1,6 @@
 ﻿# Home
 
-The SCGraphTheory set of NuGet packages contains basic graph theory implementations for .NET.
+The SCGraphTheory set of NuGet packages contain basic graph theory implementations for .NET.
 The recommended learning path is as follows:
 
 1. **[Abstractions](abstractions):** This is the recommended first stop.
