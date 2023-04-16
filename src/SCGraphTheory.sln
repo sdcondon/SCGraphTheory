@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SCGraphTheory.Documentation
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Repo Items", "Repo Items", "{1210DF84-D44D-432C-848E-0AD703ECF3F3}"
 	ProjectSection(SolutionItems) = preProject
-		..\.github\workflows\deployWebsite.yml = ..\.github\workflows\deployWebsite.yml
+		..\.github\workflows\DeployDocsToGitHubPages.yml = ..\.github\workflows\DeployDocsToGitHubPages.yml
 	EndProjectSection
 EndProject
 Global

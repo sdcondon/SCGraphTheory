@@ -1,4 +1,4 @@
-name: Deploy to GitHub pages
+name: Deploy Docs to GitHub Pages
 
 # Runs on pushes targeting the default branch, and can also be invoked manually
 on:
