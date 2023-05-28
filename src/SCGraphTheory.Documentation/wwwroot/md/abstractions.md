@@ -25,6 +25,8 @@ Consider Bellman-Ford, for example - which (iterates graph edges and) operates s
 By including both directions of an undirected edge, we allow algorithms such as these to be used against all graphs that implement this abstraction correctly.
 In this way, treating the two directions of undirected edges separately is a form of normalisation.  
   
+  (There's a justification based on Liskov here, too - which I'll get around to articulating at some point).  
+  
   ..I should however probably expand a little on the "confusion" mentioned above, and in general the downside of this simplicity. Consider the act of building a
 spanning tree for an undirected graph. Which direction of an edge is included would depend on where you start, which might not be ideal. There are of course ways
 to deal with this. The addition of an edge-valued `Reverse` property, the addition of a property to indicate the "actual" underlying `Undirected` edge (which is
