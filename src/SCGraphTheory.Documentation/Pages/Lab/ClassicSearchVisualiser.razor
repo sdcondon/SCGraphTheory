@@ -25,7 +25,7 @@
             Edges on the search frontier (i.e. in the queue/stack for exploration next) at the point at which the search completed are drawn in light grey.
         </li>
         <li>
-            The source code for this page can be found <a href="https://github.com/sdcondon/SCGraphTheory/blob/main/src/SCGraphTheory.Documentation/Pages/Lab/SearchVisualiser.razor">here</a>.
+            The source code for this page can be found <a href="https://github.com/sdcondon/SCGraphTheory/blob/main/src/SCGraphTheory.Documentation/Pages/Lab/ClassicSearchVisualiser.razor">here</a>.
         </li>
     </ul>
 </div>
@@ -34,7 +34,7 @@
     <div class="btn-group" role="group" aria-label="Paint Palette">
         @foreach (var item in PaintPalette)
         {
-            <input type="radio" class="btn-check" name="paint" id="@item.Key" autocomplete="off" />
+            <input type="radio" class="btn-check" name="paint" id="@item.Key" autocomplete="off" checked="@item.Key.Equals(PaintPalette.First().Key)" />
             <label class="btn btn-secondary" style="@item.Key.style" for="@item.Key" @onclick="@item.Value">@item.Key.text</label>
         }
     </div>
@@ -42,7 +42,7 @@
     <div class="btn-group" role="group" aria-label="Search Palette">
         @foreach (var item in SearchPalette)
         {
-            <input type="radio" class="btn-check" name="search" id="@item.Key" autocomplete="off" />
+            <input type="radio" class="btn-check" name="search" id="@item.Key" autocomplete="off" checked="@item.Key.Equals(SearchPalette.First().Key)" />
             <label class="btn btn-secondary" for="@item.Key" @onclick="@item.Value">@item.Key</label>
         }
     </div>
@@ -66,19 +66,19 @@
     {
         PaintPalette = new()
         {
-            [("⚑", "color: green")] = () => canvasClickHandler = (x, y) => world.Start = (x, y),
-            [("⚑", "color: red")] = () => canvasClickHandler = (x, y) => world.Target = (x, y),
-            [("□", "color: black")] = () => canvasClickHandler = (x, y) => world[x, y] = World.Terrain.Floor,
-            [("■", "color: blue")] = () => canvasClickHandler = (x, y) => world[x, y] = World.Terrain.Water,
-            [("■", "color: black")] = () => canvasClickHandler = (x, y) => world[x, y] = World.Terrain.Wall,
+            [("⚑", "color: green")] = () => canvasClickHandler = (x, y) => world!.Start = (x, y),
+            [("⚑", "color: red")] = () => canvasClickHandler = (x, y) => world!.Target = (x, y),
+            [("□", "color: black")] = () => canvasClickHandler = (x, y) => world![x, y] = World.Terrain.Floor,
+            [("■", "color: blue")] = () => canvasClickHandler = (x, y) => world![x, y] = World.Terrain.Water,
+            [("■", "color: black")] = () => canvasClickHandler = (x, y) => world![x, y] = World.Terrain.Wall,
         };
 
         SearchPalette = new()
         {
-            ["BF"] = () => world.RecreateSearch = world.MakeBreadthFirstSearch,
-            ["DF"] = () => world.RecreateSearch = world.MakeDepthFirstSearch,
-            ["Dj"] = () => world.RecreateSearch = world.MakeDijkstraSearch,
-            ["A*"] = () => world.RecreateSearch = world.MakeAStarSearch,
+            ["A*"] = () => world!.RecreateSearch = world.MakeAStarSearch,
+            ["Dj"] = () => world!.RecreateSearch = world.MakeDijkstraSearch,
+            ["BF"] = () => world!.RecreateSearch = world.MakeBreadthFirstSearch,
+            ["DF"] = () => world!.RecreateSearch = world.MakeDepthFirstSearch,
         };
     }
 
@@ -87,7 +87,9 @@
         if (firstRender)
         {
             world = new World((20, 20));
-            worldRenderer = new WorldRenderer(world, await canvas.CreateCanvas2DAsync(), (int)canvas.Width, (int)canvas.Height);
+            worldRenderer = new WorldRenderer(world, await canvas.CreateCanvas2DAsync(), (int)canvas!.Width, (int)canvas.Height);
+            PaintPalette.First().Value();
+            SearchPalette.First().Value();
         }
 
         await worldRenderer!.RenderAsync();
@@ -95,7 +97,7 @@
 
     private void OnCanvasClick(MouseEventArgs e)
     {
-        var cell = worldRenderer.CanvasToGridCoordinate((int)e.OffsetX, (int)e.OffsetY);
+        var cell = worldRenderer!.CanvasToGridCoordinate((int)e.OffsetX, (int)e.OffsetY);
         canvasClickHandler?.Invoke(cell.X, cell.Y);
     }
 
@@ -114,7 +116,7 @@
 
         private (int X, int Y) startPosition;
         private (int X, int Y) targetPosition;
-        private Action recreateSearch;
+        private Action? recreateSearch;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="World"/> class.
@@ -127,8 +129,6 @@
 
             Start = (0, size.Y / 2);
             Target = (size.X - 1, size.Y / 2);
-
-            RecreateSearch = MakeAStarSearch;
         }
 
         /// <summary>
@@ -160,7 +160,7 @@
         /// <summary>
         /// Gets the current search.
         /// </summary>
-        public ISearch<WorldGraph.Node, WorldGraph.Edge> LatestSearch { get; private set; }
+        public ISearch<WorldGraph.Node, WorldGraph.Edge>? LatestSearch { get; private set; }
 
         /// <summary>
         /// Gets or sets the current start position.
@@ -332,21 +332,24 @@
                 }
             }
 
-            // Render visited edges
-            foreach (var v in this.world.LatestSearch.Visited.Values)
+            if (this.world.LatestSearch != null)
             {
-                if (!Equals(v.Edge, default))
+                // Render visited edges
+                foreach (var v in this.world.LatestSearch.Visited.Values)
                 {
-                    await DrawGraphEdgeAsync(v.Edge, v.IsOnFrontier ? "lightgray" : "blue");
+                    if (!Equals(v.Edge, default))
+                    {
+                        await DrawGraphEdgeAsync(v.Edge, v.IsOnFrontier ? "lightgray" : "blue");
+                    }
                 }
-            }
 
-            // Render path to target
-            if (!Equals(this.world.LatestSearch.Target, default))
-            {
-                foreach (var edge in this.world.LatestSearch.PathToTarget())
+                // Render path to target
+                if (!Equals(this.world.LatestSearch.Target, default))
                 {
-                    await DrawGraphEdgeAsync(edge, "red");
+                    foreach (var edge in this.world.LatestSearch.PathToTarget())
+                    {
+                        await DrawGraphEdgeAsync(edge, "red");
+                    }
                 }
             }
 
