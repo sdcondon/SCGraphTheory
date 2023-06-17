@@ -1,4 +1,4 @@
-﻿@page "/lab/search-visualiser"
+﻿@page "/lab/classic-search-visualiser"
 
 @using Blazor.Extensions;
 @using Blazor.Extensions.Canvas.Canvas2D;
@@ -6,21 +6,26 @@
 @using SCGraphTheory.Search.Classic;
 @using System.Diagnostics;
 @using System.Drawing;
-@using WorldGraph = SearchVisualiser.ALGridGraph<SearchVisualiser.World.Terrain>;
+@using WorldGraph = ClassicSearchVisualiser.ALGridGraph<ClassicSearchVisualiser.World.Terrain>;
 
-<PageTitle>Search Visualiser</PageTitle>
+<PageTitle>Classic Search Visualiser</PageTitle>
 
-<h3>Search Visualiser</h3>
+<h3>Classic Search Visualiser</h3>
 
 <div class="alert alert-primary" role="alert">
     <p>
-        This page is an interactive demonstration of search algorithms found in the <a href="search">Search</a> package.
+        This page is an interactive demonstration of some of the "classic" search algorithms found in the <a href="search">Search</a> package.
         It runs entirely in your browser.
         Notes:
     </p>
     <ul>
         <li>
             So far, this is just a quick port of the WinForms app found in the Search repo. It'll improve over time.
+        </li>
+        <li>
+            It is formulated as a pathfinding problem on a 2D grid. You change the the start and end points, make changes to the "terrain",
+            and specify the search algorithm to be used. The solution path is drawn in red. Other explored edges are drawn in blue.
+            Edges on the search frontier (i.e. in the queue/stack for exploration next) at the point at which the search completed are drawn in light grey.
         </li>
         <li>
             The source code for this page can be found <a href="https://github.com/sdcondon/SCGraphTheory/blob/main/src/SCGraphTheory.Documentation/Pages/Lab/SearchVisualiser.razor">here</a>.
