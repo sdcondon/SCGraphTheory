@@ -20,9 +20,6 @@
     </p>
     <ul>
         <li>
-            So far, this is just a quick port of the WinForms app found in the Search repo. It'll improve over time.
-        </li>
-        <li>
             It is formulated as a pathfinding problem on a 2D grid. You can change the the start and end points, make changes to the "terrain",
             and specify the search algorithm to be used. The solution path is drawn in red. Other explored edges are drawn in blue.
             Edges on the search frontier (i.e. in the queue/stack for exploration next) at the point at which the search completed are drawn in light grey.
@@ -52,36 +49,36 @@
 </div>
 
 <div @onclick="OnCanvasClick" style="border: 1px solid #000000; background-color: lightgray;">
-    <BECanvas Width="400" Height="300" @ref="_canvas"></BECanvas>
+    <BECanvas Width="400" Height="300" @ref="canvas"></BECanvas>
 </div>
 
 @code {
     private Dictionary<(string text, string style), Action> PaintPalette;
     private Dictionary<string, Action> SearchPalette;
 
-    private Action<int, int>? _canvasClickHandler;
-    private World? _world;
-    private WorldRenderer? _worldRenderer;
+    private Action<int, int>? canvasClickHandler;
+    private World? world;
+    private WorldRenderer? worldRenderer;
 
-    protected BECanvas? _canvas;
+    protected BECanvas? canvas;
 
     public ClassicSearchVisualiser()
     {
         PaintPalette = new()
         {
-            [("⚑", "color: green")] = () => _canvasClickHandler = (x, y) => _world.Start = (x, y),
-            [("⚑", "color: red")] = () => _canvasClickHandler = (x, y) => _world.Target = (x, y),
-            [("□", "color: black")] = () => _canvasClickHandler = (x, y) => _world[x, y] = World.Terrain.Floor,
-            [("■", "color: blue")] = () => _canvasClickHandler = (x, y) => _world[x, y] = World.Terrain.Water,
-            [("■", "color: black")] = () => _canvasClickHandler = (x, y) => _world[x, y] = World.Terrain.Wall,
+            [("⚑", "color: green")] = () => canvasClickHandler = (x, y) => world.Start = (x, y),
+            [("⚑", "color: red")] = () => canvasClickHandler = (x, y) => world.Target = (x, y),
+            [("□", "color: black")] = () => canvasClickHandler = (x, y) => world[x, y] = World.Terrain.Floor,
+            [("■", "color: blue")] = () => canvasClickHandler = (x, y) => world[x, y] = World.Terrain.Water,
+            [("■", "color: black")] = () => canvasClickHandler = (x, y) => world[x, y] = World.Terrain.Wall,
         };
 
         SearchPalette = new()
         {
-            ["BF"] = () => _world.RecreateSearch = _world.MakeBreadthFirstSearch,
-            ["DF"] = () => _world.RecreateSearch = _world.MakeDepthFirstSearch,
-            ["Dj"] = () => _world.RecreateSearch = _world.MakeDijkstraSearch,
-            ["A*"] = () => _world.RecreateSearch = _world.MakeAStarSearch,
+            ["BF"] = () => world.RecreateSearch = world.MakeBreadthFirstSearch,
+            ["DF"] = () => world.RecreateSearch = world.MakeDepthFirstSearch,
+            ["Dj"] = () => world.RecreateSearch = world.MakeDijkstraSearch,
+            ["A*"] = () => world.RecreateSearch = world.MakeAStarSearch,
         };
     }
 
@@ -89,17 +86,17 @@
     {
         if (firstRender)
         {
-            _world = new World((20, 20));
-            _worldRenderer = new WorldRenderer(_world, await _canvas.CreateCanvas2DAsync(), (int)_canvas.Width, (int)_canvas.Height);
+            world = new World((20, 20));
+            worldRenderer = new WorldRenderer(world, await canvas.CreateCanvas2DAsync(), (int)canvas.Width, (int)canvas.Height);
         }
 
-        await _worldRenderer!.RenderAsync();
+        await worldRenderer!.RenderAsync();
     }
 
     private void OnCanvasClick(MouseEventArgs e)
     {
-        var cell = _worldRenderer.CanvasToGridCoordinate((int)e.OffsetX, (int)e.OffsetY);
-        _canvasClickHandler?.Invoke(cell.X, cell.Y);
+        var cell = worldRenderer.CanvasToGridCoordinate((int)e.OffsetX, (int)e.OffsetY);
+        canvasClickHandler?.Invoke(cell.X, cell.Y);
     }
 
     /// <summary>
