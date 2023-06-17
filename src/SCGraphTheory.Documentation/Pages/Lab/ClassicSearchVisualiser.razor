@@ -47,7 +47,7 @@
     </label>
 }
 
-<div @onclick="OnCanvasClick">
+<div @onclick="OnCanvasClick" style="border: 1px solid #000000; background-color: lightgray;">
     <BECanvas Width="400" Height="300" @ref="_canvas"></BECanvas>
 </div>
 
@@ -163,8 +163,11 @@
             get => startPosition;
             set
             {
-                startPosition = value;
-                recreateSearch?.Invoke();
+                if (IsInBounds(value.X, value.Y))
+                {
+                    startPosition = value;
+                    recreateSearch?.Invoke();
+                }
             }
         }
 
@@ -176,8 +179,11 @@
             get => targetPosition;
             set
             {
-                targetPosition = value;
-                recreateSearch?.Invoke();
+                if (IsInBounds(value.X, value.Y))
+                {
+                    targetPosition = value;
+                    recreateSearch?.Invoke();
+                }
             }
         }
 
@@ -203,13 +209,11 @@
             get => graph[x, y].Value;
             set
             {
-                if (x < 0 || x >= Size.X || y < 0 || y >= Size.Y)
+                if (IsInBounds(x, y))
                 {
-                    return;
+                    graph[x, y].Value = value;
+                    recreateSearch?.Invoke();
                 }
-
-                graph[x, y].Value = value;
-                recreateSearch?.Invoke();
             }
         }
 
@@ -258,6 +262,11 @@
                 graph[Start.X, Start.Y],
                 t => t.Coordinates == Target);
             LatestSearch.Complete();
+        }
+
+        private bool IsInBounds(int x, int y)
+        {
+            return x >= 0 && x < Size.X && y >= 0 && y < Size.Y;
         }
 
         private static float EuclideanDistance((int X, int Y) a, (int X, int Y) b)
