@@ -23,7 +23,7 @@
             So far, this is just a quick port of the WinForms app found in the Search repo. It'll improve over time.
         </li>
         <li>
-            It is formulated as a pathfinding problem on a 2D grid. You change the the start and end points, make changes to the "terrain",
+            It is formulated as a pathfinding problem on a 2D grid. You can change the the start and end points, make changes to the "terrain",
             and specify the search algorithm to be used. The solution path is drawn in red. Other explored edges are drawn in blue.
             Edges on the search frontier (i.e. in the queue/stack for exploration next) at the point at which the search completed are drawn in light grey.
         </li>
@@ -33,47 +33,57 @@
     </ul>
 </div>
 
-@foreach (var item in PaintPalette)
-{
-    <label class="btn" style="@item.Key.style" @onclick="@(() => _canvasClickHandler = (x, y) => item.Value.Invoke(_world, x, y))">
-        <input type="radio" class="btn-check" name="paint" value="@item.Key.text" /> @item.Key.text
-    </label>
-}
+<div class="pb-3">
+    <div class="btn-group" role="group" aria-label="Paint Palette">
+        @foreach (var item in PaintPalette)
+        {
+            <input type="radio" class="btn-check" name="paint" id="@item.Key" autocomplete="off" />
+            <label class="btn btn-secondary" style="@item.Key.style" for="@item.Key" @onclick="@item.Value">@item.Key.text</label>
+        }
+    </div>
 
-@foreach (var item in SearchPalette)
-{
-    <label class="btn" for="@item.Key" @onclick="@(() => item.Value.Invoke(_world))">
-        <input type="radio" class="btn-check" name="paint" value="@item.Key" @onclick="@(() => item.Value.Invoke(_world))" /> @item.Key
-    </label>
-}
+    <div class="btn-group" role="group" aria-label="Search Palette">
+        @foreach (var item in SearchPalette)
+        {
+            <input type="radio" class="btn-check" name="search" id="@item.Key" autocomplete="off" />
+            <label class="btn btn-secondary" for="@item.Key" @onclick="@item.Value">@item.Key</label>
+        }
+    </div>
+</div>
 
 <div @onclick="OnCanvasClick" style="border: 1px solid #000000; background-color: lightgray;">
     <BECanvas Width="400" Height="300" @ref="_canvas"></BECanvas>
 </div>
 
 @code {
-    private Dictionary<(string text, string style), Action<World, int, int>> PaintPalette = new()
-    {
-        [("⚑", "color: green")] = (w, x, y) => w.Start = (x, y),
-        [("⚑", "color: red")] = (w, x, y) => w.Target = (x, y),
-        [("■", "color: white")] = (w, x, y) => w[x, y] = World.Terrain.Floor,
-        [("■", "color: blue")] = (w, x, y) => w[x, y] = World.Terrain.Water,
-        [("■", "color: black")] = (w, x, y) => w[x, y] = World.Terrain.Wall,
-    };
-
-    private static Dictionary<string, Action<World>> SearchPalette = new()
-    {
-        ["BF"] = w => w.RecreateSearch = w.MakeBreadthFirstSearch,
-        ["DF"] = w => w.RecreateSearch = w.MakeDepthFirstSearch,
-        ["Dj"] = w => w.RecreateSearch = w.MakeDijkstraSearch,
-        ["A*"] = w => w.RecreateSearch = w.MakeAStarSearch,
-    };
+    private Dictionary<(string text, string style), Action> PaintPalette;
+    private Dictionary<string, Action> SearchPalette;
 
     private Action<int, int>? _canvasClickHandler;
     private World? _world;
     private WorldRenderer? _worldRenderer;
 
     protected BECanvas? _canvas;
+
+    public ClassicSearchVisualiser()
+    {
+        PaintPalette = new()
+        {
+            [("⚑", "color: green")] = () => _canvasClickHandler = (x, y) => _world.Start = (x, y),
+            [("⚑", "color: red")] = () => _canvasClickHandler = (x, y) => _world.Target = (x, y),
+            [("□", "color: black")] = () => _canvasClickHandler = (x, y) => _world[x, y] = World.Terrain.Floor,
+            [("■", "color: blue")] = () => _canvasClickHandler = (x, y) => _world[x, y] = World.Terrain.Water,
+            [("■", "color: black")] = () => _canvasClickHandler = (x, y) => _world[x, y] = World.Terrain.Wall,
+        };
+
+        SearchPalette = new()
+        {
+            ["BF"] = () => _world.RecreateSearch = _world.MakeBreadthFirstSearch,
+            ["DF"] = () => _world.RecreateSearch = _world.MakeDepthFirstSearch,
+            ["Dj"] = () => _world.RecreateSearch = _world.MakeDijkstraSearch,
+            ["A*"] = () => _world.RecreateSearch = _world.MakeAStarSearch,
+        };
+    }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
