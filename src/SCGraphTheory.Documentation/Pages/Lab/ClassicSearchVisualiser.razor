@@ -32,64 +32,64 @@
 
 <div class="pb-3">
     <div class="btn-group" role="group" aria-label="Paint Palette">
-        @foreach (var item in PaintPalette)
+        @foreach (var item in paintPalette)
         {
-            <input type="radio" class="btn-check" name="paint" id="@item.Key" autocomplete="off" checked="@item.Key.Equals(PaintPalette.First().Key)" />
+            <input type="radio" class="btn-check" name="paint" id="@item.Key" autocomplete="off" checked="@item.Key.Equals(paintPalette.First().Key)" />
             <label class="btn btn-secondary" style="@item.Key.style" for="@item.Key" @onclick="@item.Value">@item.Key.text</label>
         }
     </div>
 
     <div class="btn-group" role="group" aria-label="Search Palette">
-        @foreach (var item in SearchPalette)
+        @foreach (var item in searchPalette)
         {
-            <input type="radio" class="btn-check" name="search" id="@item.Key" autocomplete="off" checked="@item.Key.Equals(SearchPalette.First().Key)" />
+            <input type="radio" class="btn-check" name="search" id="@item.Key" autocomplete="off" checked="@item.Key.Equals(searchPalette.First().Key)" />
             <label class="btn btn-secondary" for="@item.Key" @onclick="@item.Value">@item.Key</label>
         }
     </div>
 </div>
 
 <div @onclick="OnCanvasClick" style="border: 1px solid #000000; background-color: lightgray;">
-    <BECanvas Width="400" Height="300" @ref="canvas"></BECanvas>
+    <BECanvas Width="300" Height="300" @ref="canvas"></BECanvas>
 </div>
 
 @code {
-    private Dictionary<(string text, string style), Action> PaintPalette;
-    private Dictionary<string, Action> SearchPalette;
+    private readonly World world;
+    private readonly Dictionary<(string text, string style), Action> paintPalette;
+    private readonly Dictionary<string, Action> searchPalette;
 
-    private Action<int, int>? canvasClickHandler;
-    private World? world;
     private WorldRenderer? worldRenderer;
-
+    private Action<int, int>? canvasClickHandler;
     protected BECanvas? canvas;
 
     public ClassicSearchVisualiser()
     {
-        PaintPalette = new()
-        {
-            [("⚑", "color: green")] = () => canvasClickHandler = (x, y) => world!.Start = (x, y),
-            [("⚑", "color: red")] = () => canvasClickHandler = (x, y) => world!.Target = (x, y),
-            [("□", "color: black")] = () => canvasClickHandler = (x, y) => world![x, y] = World.Terrain.Floor,
-            [("■", "color: blue")] = () => canvasClickHandler = (x, y) => world![x, y] = World.Terrain.Water,
-            [("■", "color: black")] = () => canvasClickHandler = (x, y) => world![x, y] = World.Terrain.Wall,
-        };
+        world = new World(20, 20);
 
-        SearchPalette = new()
+        paintPalette = new()
         {
-            ["A*"] = () => world!.RecreateSearch = world.MakeAStarSearch,
-            ["Dj"] = () => world!.RecreateSearch = world.MakeDijkstraSearch,
-            ["BF"] = () => world!.RecreateSearch = world.MakeBreadthFirstSearch,
-            ["DF"] = () => world!.RecreateSearch = world.MakeDepthFirstSearch,
+            [("⚑", "color: green")] = () => canvasClickHandler = (x, y) => world.Start = (x, y),
+            [("⚑", "color: red")] = () => canvasClickHandler = (x, y) => world.Target = (x, y),
+            [("■", "color: white")] = () => canvasClickHandler = (x, y) => world[x, y] = World.Terrain.Floor,
+            [("■", "color: royalblue")] = () => canvasClickHandler = (x, y) => world[x, y] = World.Terrain.Water,
+            [("■", "color: black")] = () => canvasClickHandler = (x, y) => world[x, y] = World.Terrain.Wall,
         };
+        paintPalette.First().Value();
+
+        searchPalette = new()
+        {
+            ["A*"] = () => world.RecreateSearch = world.MakeAStarSearch,
+            ["Dj"] = () => world.RecreateSearch = world.MakeDijkstraSearch,
+            ["BF"] = () => world.RecreateSearch = world.MakeBreadthFirstSearch,
+            ["DF"] = () => world.RecreateSearch = world.MakeDepthFirstSearch,
+        };
+        searchPalette.First().Value();
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
-            world = new World((20, 20));
-            worldRenderer = new WorldRenderer(world, await canvas.CreateCanvas2DAsync(), (int)canvas!.Width, (int)canvas.Height);
-            PaintPalette.First().Value();
-            SearchPalette.First().Value();
+            worldRenderer = new WorldRenderer(world, canvas!, await canvas.CreateCanvas2DAsync());
         }
 
         await worldRenderer!.RenderAsync();
@@ -122,13 +122,13 @@
         /// Initializes a new instance of the <see cref="World"/> class.
         /// </summary>
         /// <param name="size">The size of the world.</param>
-        public World((int X, int Y) size)
+        public World(int sizeX, int sizeY)
         {
-            Size = size;
-            graph = new WorldGraph(size, (from, to) => from != Terrain.Wall && to != Terrain.Wall);
+            Size = (sizeX, sizeY);
+            graph = new WorldGraph(Size, (from, to) => from != Terrain.Wall && to != Terrain.Wall);
 
-            Start = (0, size.Y / 2);
-            Target = (size.X - 1, size.Y / 2);
+            Start = (0, Size.Y / 2);
+            Target = (Size.X - 1, Size.Y / 2);
         }
 
         /// <summary>
@@ -300,7 +300,7 @@
         private static readonly Dictionary<World.Terrain, string> fillStyles = new()
         {
             [World.Terrain.Floor] = "white",
-            [World.Terrain.Water] = "blue",
+            [World.Terrain.Water] = "royalblue",
             [World.Terrain.Wall] = "black",
         };
 
@@ -308,14 +308,15 @@
         private readonly Canvas2DContext context;
         private readonly int tileSize;
 
-        public WorldRenderer(World world, Canvas2DContext context, int width, int height)
+        public WorldRenderer(World world, BECanvas canvas, Canvas2DContext context)
         {
             this.world = world;
             this.context = context;
 
-            var maxTileSizeX = width / world.Size.X;
-            var maxTileSizeY = height / world.Size.Y;
-            this.tileSize = Math.Min(maxTileSizeX, maxTileSizeY);
+            // nb: for now at least, no handling of canvas size changes..
+            var maxTileSizeX = canvas.Width / world.Size.X;
+            var maxTileSizeY = canvas.Height / world.Size.Y;
+            this.tileSize = (int)Math.Min(maxTileSizeX, maxTileSizeY);
         }
 
         public async Task RenderAsync()
@@ -332,6 +333,7 @@
                 }
             }
 
+            // Render latest search if there is one
             if (this.world.LatestSearch != null)
             {
                 // Render visited edges
@@ -354,43 +356,44 @@
             }
 
             // Render start & target
-            await DrawEllipseAsync(world.Start.X, world.Start.Y, 0.75, "green");
-            await DrawEllipseAsync(world.Target.X, world.Target.Y, 0.75, "red");
+            await DrawCircleAsync(world.Start, 0.75, "green");
+            await DrawCircleAsync(world.Target, 0.75, "red");
 
             await context.EndBatchAsync();
         }
 
         public (int X, int Y) CanvasToGridCoordinate(int x, int y)
         {
-            var cellX = x / tileSize;
-            var cellY = y / tileSize;
-            return (cellX, cellY);
+            var gridX = x / tileSize;
+            var gridY = y / tileSize;
+            return (gridX, gridY);
+        }
+
+        public (int X, int Y) GridToCanvasCoordinate(int x, int y, double xOffset = 0.0, double yOffset = 0.0)
+        {
+            var canvasX = (x * tileSize) + (int)(tileSize * (xOffset + 0.5));
+            var canvasY = (y * tileSize) + (int)(tileSize * (yOffset + 0.5));
+            return (canvasX, canvasY);
         }
 
         private async Task DrawGraphEdgeAsync(WorldGraph.Edge edge, string colour)
         {
+            await context.BeginPathAsync();
             await context.SetStrokeStyleAsync(colour);
             var from = GridToCanvasCoordinate(edge.From.Coordinates.X, edge.From.Coordinates.Y);
-            var to = GridToCanvasCoordinate(edge.To.Coordinates.X, edge.To.Coordinates.Y);
-            await context.SetStrokeStyleAsync(colour);
-            await context.BeginPathAsync();
             await context.MoveToAsync(from.X, from.Y);
+            var to = GridToCanvasCoordinate(edge.To.Coordinates.X, edge.To.Coordinates.Y);
             await context.LineToAsync(to.X, to.Y);
             await context.StrokeAsync();
         }
 
-        private async Task DrawEllipseAsync(int x, int y, double size, string colour)
+        private async Task DrawCircleAsync((int X, int Y) gridCoordinate, double diameterInTiles, string colour)
         {
             await context.BeginPathAsync();
-            var centre = GridToCanvasCoordinate(x, y);
-            await context.ArcAsync(centre.X, centre.Y, size * tileSize / 2, 0, 2 * Math.PI);
+            var centre = GridToCanvasCoordinate(gridCoordinate.X, gridCoordinate.Y);
+            await context.ArcAsync(centre.X, centre.Y, diameterInTiles * tileSize / 2, 0, 2 * Math.PI);
             await context.SetFillStyleAsync(colour);
             await context.FillAsync();
-        }
-
-        private (int X, int Y) GridToCanvasCoordinate(int x, int y, double xOffset = 0.0, double yOffset = 0.0)
-        {
-            return ((x * tileSize) + (int)(tileSize * (xOffset + 0.5)), (y * tileSize) + (int)(tileSize * (yOffset + 0.5)));
         }
     }
 
