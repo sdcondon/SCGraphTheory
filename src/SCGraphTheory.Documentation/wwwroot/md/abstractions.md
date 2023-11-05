@@ -4,7 +4,7 @@
 
 The SCGraphTheory.Abstractions NuGet package contains interfaces for the three fundamental elements of graph theory - [IGraph<TNode,TEdge>](https://github.com/sdcondon/SCGraphTheory.Abstractions/blob/main/src/Abstractions/IGraph{TNode,TEdge}.cs), [INode<TNode,TEdge>](https://github.com/sdcondon/SCGraphTheory.Abstractions/blob/main/src/Abstractions/INode{TNode,TEdge}.cs) and [IEdge<TNode,TEdge>](https://github.com/sdcondon/SCGraphTheory.Abstractions/blob/main/src/Abstractions/IEdge{TNode,TEdge}.cs) - to allow for graph algorithms that do not depend on a particular graph representation.
 
-Example implementation and usage can be found in the separate [SCGraphTheory.AdjacencyList](https://github.com/sdcondon/SCGraphTheory.AdjacencyList) and [SCGraphTheory.Search](https://github.com/sdcondon/SCGraphTheory.Search) repositories, respectively.
+Example implementation and usage can be found in the [SCGraphTheory.AdjacencyList](adjacency-list) and [SCGraphTheory.Search](search) packages, respectively.
 Additional (test-focused) implementation examples can be found in the [TestGraphs library](https://github.com/sdcondon/SCGraphTheory.Search/tree/main/src/Search.TestGraphs) in SCGraphTheory.Search.
 Notably:
 - A very simple (though rather inefficient) [LINQ-powered immutable implementation](https://github.com/sdcondon/SCGraphTheory.Search/blob/main/src/Search.TestGraphs/LinqGraph.cs). Used for tests in the search algorithm package.
@@ -35,10 +35,10 @@ where this is really going to cause a "problem" is for algorithms that enumerate
 and operate *specifically* on undirected graphs. In such cases, you are likely to need to expand on the abstraction (again, probably using a `Reverse` and/or 
 `Undirected` prop) in order to write the algorithm in the first place.  
   
-  A final thought on this: one way of thinking about this abstraction is that it deals with edge traversals (which are inherently directed) rather than edges - and
-it is down to the consumer to decide how the two concepts are related in their usage. This of course could result in a little extra work in certain cases, but (in
-the author's humble opinion) in the vast majority of situations will not, and thus the resulting simplicity is worthwhile.
+  A final thought on this: one way of thinking about this abstraction is that it deals with available edge *traversals* (which are inherently directed) rather than the
+edges themselves - and it is down to the implementer to decide how the two concepts are related. This of course could result in a little extra work in certain cases,
+but (in the author's humble opinion) in the vast majority of situations will not, and thus the resulting simplicity is worthwhile.
 * The declaration of the edges collection of each node as an `IReadOnlyCollection<TEdge>` necessitates boxing by consumers of these interfaces when this collection is a value type. See [an alternative formulation in the benchmarks project of the SCGraphTheory.Search](https://github.com/sdcondon/SCGraphTheory.Search/tree/main/src/Search.Benchmarks/AlternativeAbstractions/TEdges) for more on this.
 * Naming is hard:
-  * Why `INode` and not `IVertex`? Simply because its shorter. I must confess that I am slightly regretting this one though..
+  * Why `INode` and not `IVertex`? Simply because its shorter.
   * Why call it "SCGraphTheory"? SC are my initials. I do worry that using my initials comes off as a little arrogant - but I'd argue that just calling it "GraphTheory.." would be more arrogant. And inventing a brand name would be tedious - and no doubt longer than SC.. 
