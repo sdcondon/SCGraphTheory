@@ -36,7 +36,7 @@ and operate *specifically* on undirected graphs. In such cases, you are likely t
 `Undirected` prop) in order to write the algorithm in the first place.  
   
   A final thought on this: one way of thinking about this abstraction is that it deals with available edge *traversals* (which are inherently directed) rather than the
-edges themselves - and it is down to the implementer to decide how the two concepts are related. This of course could result in a little extra work in certain cases,
+edges themselves - and it is down to the implementer to decide how the two concepts are related. This of course could result in a little extra work in certain cases (see the paragraph above),
 but (in the author's humble opinion) in the vast majority of situations will not, and thus the resulting simplicity is worthwhile.
 * The declaration of the edges collection of each node as an `IReadOnlyCollection<TEdge>` necessitates boxing by consumers of these interfaces when this collection is a value type. See [an alternative formulation in the benchmarks project of the SCGraphTheory.Search](https://github.com/sdcondon/SCGraphTheory.Search/tree/main/src/Search.Benchmarks/AlternativeAbstractions/TEdges) for more on this.
 * Naming is hard:
