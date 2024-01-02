@@ -391,7 +391,7 @@
         {
             await context.BeginPathAsync();
             var centre = GridToCanvasCoordinate(gridCoordinate.X, gridCoordinate.Y);
-            await context.ArcAsync(centre.X, centre.Y, diameterInTiles * tileSize / 2, 0, 2 * Math.PI);
+            await context.ArcAsync(centre.X, centre.Y, diameterInTiles * tileSize / 2, 0, Math.Tau);
             await context.SetFillStyleAsync(colour);
             await context.FillAsync();
         }
