@@ -1,13 +1,6 @@
 ﻿@inherits LayoutComponentBase
 @inject IJSRuntime JS
 
-@code{
-    protected override void OnAfterRender(bool firstRender)
-    {
-        JS.InvokeVoidAsync("PR.prettyPrint");
-    }
-}
-
 <div class="page">
     <div class="sidebar">
         <NavMenu />
@@ -15,8 +8,8 @@
 
     <main>
         <div class="top-row px-4">
-            <a href="https://www.nuget.org/packages?q=scgraphtheory"><img src="NuGet_project_logo.svg" alt="NuGet packages (SCGraphTheory)" style="width:32px;height:32px;" /></a>
-            <a href="https://github.com/sdcondon?tab=repositories&q=SCGraphTheory"><img src="GitHub-Mark-32px.png" alt="GitHub Repositories (SCGraphTheory)" /></a>
+            <a href="https://www.nuget.org/packages?q=scgraphtheory"><img src="img/NuGet_project_logo.svg" alt="NuGet packages (SCGraphTheory)" style="width:32px;height:32px;" /></a>
+            <a href="https://github.com/sdcondon?tab=repositories&q=SCGraphTheory"><img src="img/GitHub-Mark-32px.png" alt="GitHub Repositories (SCGraphTheory)" /></a>
         </div>
 
         <article class="content px-4">
@@ -27,9 +20,7 @@
 
                 <a href="#" class="col-md-4 d-flex align-items-center justify-content-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none"></a>
 
-                <ul class="nav col-md-4 justify-content-end text-muted">
-                    <li class="nav-item"><a href="https://sdcondon.net" class="nav-link px-2 text-muted">&copy; 2023 Simon Condon</a></li>
-                </ul>
+                <div class="nav col-md-4 justify-content-end text-muted">&copy; 2023 Simon Condon</div>
             </footer>
         </article>
     </main>

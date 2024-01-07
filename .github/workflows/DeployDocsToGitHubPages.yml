@@ -31,7 +31,7 @@ jobs:
       
       - uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: '7.0.x'
+          dotnet-version: '8.x'
 
       - name: Publish Documentation project to 'release' folder
         run: dotnet publish src/SCGraphTheory.Documentation/SCGraphTheory.Documentation.csproj -c Release -o release --nologo
