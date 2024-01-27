@@ -8,7 +8,7 @@
     }
   },
   "profiles": {
-    "SCClassicalPlanning.Documentation": {
+    "SCGraphTheory.Documentation": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,

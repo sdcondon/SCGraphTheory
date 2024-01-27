@@ -10,24 +10,34 @@
 
 <PageTitle>Classic Search Visualiser</PageTitle>
 
-<h3>Classic Search Visualiser</h3>
+<h3>Classic Search Visualiser <a data-bs-toggle="modal" data-bs-target="#explanationModal" href="#"><span class="bi bi-info-circle" aria-hidden="true"></span></a></h3>
 
-<div class="alert alert-primary" role="alert">
-    <p>
-        This page is an interactive demonstration of some of the "classic" search algorithms found in the <a href="search">Search</a> package.
-        It runs entirely in your browser.
-        Notes:
-    </p>
-    <ul>
-        <li>
-            It is formulated as a pathfinding problem on a 2D grid. You can change the the start and end points, make changes to the "terrain",
-            and specify the search algorithm to be used. The solution path is drawn in red. Other explored edges are drawn in blue.
-            Edges on the search frontier (i.e. in the queue/stack for exploration next) at the point at which the search completed are drawn in light grey.
-        </li>
-        <li>
-            The source code for this page can be found <a href="https://github.com/sdcondon/SCGraphTheory/blob/main/src/SCGraphTheory.Documentation/Pages/Lab/ClassicSearchVisualiser.razor">here</a>.
-        </li>
-    </ul>
+<div class="modal fade" id="explanationModal" tabindex="-1" aria-labelledby="explanationModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="explanationModalLabel">Explanation</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>
+                    This page is an interactive demonstration of some of the "classic" search algorithms found in the "Search" package.
+                    It runs entirely in your browser.
+                    Notes:
+                </p>
+                <ul>
+                    <li>
+                        It is formulated as a pathfinding problem on a 2D grid. You can change the the start and end points, make changes to the "terrain",
+                        and specify the search algorithm to be used. The solution path is drawn in red. Other explored edges are drawn in blue.
+                        Edges on the search frontier (i.e. in the queue/stack for exploration next) at the point at which the search completed are drawn in light grey.
+                    </li>
+                    <li>
+                        The source code for this page can be found <a href="https://github.com/sdcondon/SCGraphTheory/blob/main/src/SCGraphTheory.Documentation/Pages/Lab/ClassicSearchVisualiser.razor">here</a>.
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
 </div>
 
 <div class="pb-3">
