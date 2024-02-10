@@ -3,6 +3,7 @@
 [![NuGet version (SCGraphTheory.Abstractions)](https://img.shields.io/nuget/v/SCGraphTheory.Abstractions.svg?style=flat-square)](https://www.nuget.org/packages/SCGraphTheory.Abstractions/) 
 
 The SCGraphTheory.Abstractions NuGet package contains interfaces for the three fundamental elements of graph theory - [IGraph<TNode,TEdge>](https://github.com/sdcondon/SCGraphTheory.Abstractions/blob/main/src/Abstractions/IGraph{TNode,TEdge}.cs), [INode<TNode,TEdge>](https://github.com/sdcondon/SCGraphTheory.Abstractions/blob/main/src/Abstractions/INode{TNode,TEdge}.cs) and [IEdge<TNode,TEdge>](https://github.com/sdcondon/SCGraphTheory.Abstractions/blob/main/src/Abstractions/IEdge{TNode,TEdge}.cs) - to allow for graph algorithms that do not depend on a particular graph representation.
+As of v1.1, for .NET 6 and up, async versions of these interfaces are also present - in which all of the collection-valued properties (outbound edges of a node, as well as the nodes and edges of a graph as a whole) are all IAsyncEnumerables.
 
 Example implementation and usage can be found in the [SCGraphTheory.AdjacencyList](adjacency-list) and [SCGraphTheory.Search](search) packages, respectively.
 Additional (test-focused) implementation examples can be found in the [TestGraphs library](https://github.com/sdcondon/SCGraphTheory.Search/tree/main/src/Search.TestGraphs) in SCGraphTheory.Search.
