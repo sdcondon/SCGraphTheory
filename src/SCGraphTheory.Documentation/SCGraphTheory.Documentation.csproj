@@ -7,6 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Razor\Pages\Abstractions.razor.md" />
+    <EmbeddedResource Include="Razor\Pages\AdjacencyList.razor.md" />
+    <EmbeddedResource Include="Razor\Pages\Home.razor.md" />
+    <EmbeddedResource Include="Razor\Pages\Search.razor.md" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Blazor.Extensions.Canvas" Version="1.1.1" />
     <PackageReference Include="Blazorise.Bootstrap5" Version="1.7.5" />
     <PackageReference Include="Blazorise.Icons.Bootstrap" Version="1.7.5" />
