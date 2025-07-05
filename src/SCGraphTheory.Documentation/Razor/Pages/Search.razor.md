@@ -60,7 +60,7 @@ var simulatedAnnealing = new SimulatedAnnealing<MyNodeType, MyEdgeType>(
 Like the `Classic` searches, the local searches are executed step-by-step via a `NextStep()` method.
 This (as opposed to having to execute a search all the way to completion) is to maximise the flexibility with which potentially expensive searches can be executed.
 
-## And-or search algorithms _[v2.3 onwards]_
+## And-or search algorithms
 
 The `AndOr` namespace contains implementations (well, just a DFS for now) of search algorithms for "and-or" graphs.
 The overall approach taken here is that a delegate is used to identify edges that actually represent a set of conjoined "and" edges (_all_ of which must ultimately lead to a target node in a search solution).
