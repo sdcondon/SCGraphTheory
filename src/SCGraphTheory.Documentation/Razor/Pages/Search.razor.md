@@ -11,20 +11,20 @@ They should be fairly intuitive to use.
 Here are some example instantiations:
 
 ```csharp
-var breadthFirst = new BreadthFirstSearch<MyNodeType, MyEdgeType>(
+BreadthFirstSearch<MyNodeType, MyEdgeType> breadthFirst = new(
     source: mySpecificSourceNode,
     isTarget: n => n == mySpecificTargetNode);
 
-var depthFirst = new DepthFirstSearch<MyNodeType, MyEdgeType>(
+DepthFirstSearch<MyNodeType, MyEdgeType> depthFirst = new(
     source: mySpecificSourceNode,
     isTarget: n => n == mySpecificTargetNode);
 
-var dijkstra = new DijkstraSearch<MyNodeType, MyEdgeType>(
+DijkstraSearch<MyNodeType, MyEdgeType> dijkstra = new(
     source: mySpecificSourceNode,
     isTarget: n => n.MyProperty == myDesiredValue,
     getEdgeCost: e => e.MyEdgeCost);
 
-var aStar = new AStarSearch<MyNodeType, MyEdgeType>(
+AStarSearch<MyNodeType, MyEdgeType> aStar = new(
     source: myGraph.MyNodeIndex[0, 0],
     isTarget: n => n.Coords == targetCoords,
     getEdgeCost: e => e.MyEdgeCost,
@@ -47,11 +47,11 @@ alternatives for each that allow a user-specified (possibly non-numeric) cost ty
 The `Local` namespace contains implementations of the (steepest-ascent) hill climb and simulated annealing search algorithms. They should also be fairly intuitive to use. Here are some example instantiations:
 
 ```csharp
-var hillClimb = new HillClimb<MyNodeType, MyEdgeType, MyUtilityType>(
+HillClimb<MyNodeType, MyEdgeType, MyUtilityType> hillClimb = new(
     source: mySpecificSourceNode,
     getUtility: n => n.MyUtilityProp);
 
-var simulatedAnnealing = new SimulatedAnnealing<MyNodeType, MyEdgeType>(
+SimulatedAnnealing<MyNodeType, MyEdgeType> simulatedAnnealing = new(
     source: mySpecificSourceNode,
     getUtility: n => n.MyUtilityProp,
     annealingSchedule: t => Math.Max(1 - (.01f * t), 0));
@@ -69,7 +69,7 @@ Another way of looking at this is that we divide our graph into "or" nodes and "
 See the [Specialized.AndOr namespace](https://github.com/sdcondon/SCGraphTheory.Search/blob/main/src/Search.TestGraphs/Specialized/AndOr) in the test graphs project for a couple of and-or graph examples.
 
 ```csharp
-var andOrDFS = new AndOrDFS<MyBaseNodeType, MyBaseEdgeType>(
+AndOrDFS<MyBaseNodeType, MyBaseEdgeType> andOrDFS = new(
     source: mySourceNode,
     isTarget: IsTargetNode,
     isAndEdgeCollection: e => e is MyConjoinedEdgeCollectionType);

@@ -11,36 +11,34 @@ The SCGraphTheory.AdjacencyList NuGet package contains a mutable, in-memory adja
 ```csharp
 using SCGraphTheory.AdjacencyList;
 
-namespace MyDirectedGraph
+namespace MyDirectedGraph;
+
+public class Node(string myNodeProp) : NodeBase<Node, Edge>
 {
-    public class Node : NodeBase<Node, Edge>
+    public string MyNodeProp { get; } = myNodeProp;
+}
+
+public class Edge(Node from, Node to, string myEdgeProp) : EdgeBase<Node, Edge>(from, to)
+{
+    public string MyEdgeProp { get; } = myEdgeProp;
+}
+
+public static class Program
+{
+    ...
+
+    private static Graph<Node, Edge> MakeGraph()
     {
-        public Node(string myNodeProp) => MyNodeProp = myNodeProp;
+        Graph<Node, Edge> graph = new();
 
-        public string MyNodeProp { get; }
-    }
+        Node node1 = new("node 1");
+        graph.Add(node1);
 
-    public class Edge : EdgeBase<Node, Edge>
-    {
-        public Edge(Node from, Node to, string myEdgeProp)
-            : base(from, to) => MyEdgeProp = myEdgeProp;
+        Node node2 = new("node 2");
+        graph.Add(node2);
 
-        public string MyEdgeProp { get; }
-    }
-
-    public static class Program
-    {
+        graph.Add(new Edge(node1, node2, "edge 1-2"));
         ...
-
-        private static Graph<Node, Edge> MakeGraph()
-        {
-            var graph = new Graph<Node, Edge>();
-            Node node1, node2;
-            graph.Add(node1 = new Node("node 1"));
-            graph.Add(node2 = new Node("node 2"));
-            graph.Add(new Edge(node1, node2, "edge 1-2"));
-            ...
-        }
     }
 }
 ```
@@ -52,58 +50,61 @@ namespace MyDirectedGraph
 ```csharp
 using SCGraphTheory.AdjacencyList;
 
-namespace MyUndirectedGraph
+namespace MyUndirectedGraph;
+
+public class Node : NodeBase<Node, Edge>
 {
-    public class Node : NodeBase<Node, Edge>
+}
+
+public class Edge : UndirectedEdgeBase<Node, Edge>
+{
+    private string myEdgeProp;
+
+    // note the delegate passed to base ctor here - which is for constructing
+    // the reverse edge of this new edge - and note that it calls the other
+    // constructor of this class (see below)
+    public Edge(Node from, Node to, string myEdgeProp)
+        : base(from, to, (f, t, r) => new Edge(f, t, r, myEdgeProp))
     {
+        this.myEdgeProp = myEdgeProp;
     }
 
-    public class Edge : UndirectedEdgeBase<Node, Edge>
+    // this ctor is to construct an edge whose reverse already exists - note that
+    // it calls the other base class ctor to one called by the ctor above. Also note
+    // that this is private - we only need to invoke it in the lambda above.
+    private Edge(Node from, Node to, Edge reverse, string myEdgeProp)
+        : base(from, to, reverse)
     {
-        private string myEdgeProp;
-
-        // note the delegate passed to base ctor here - which is for constructing
-        // the reverse edge of this new edge - and note that it calls the other
-        // constructor of this class (see below)
-        public Edge(Node from, Node to, string myEdgeProp)
-            : base(from, to, (f, t, r) => new Edge(f, t, r, myEdgeProp))
-        {
-            this.myEdgeProp = myEdgeProp;
-        }
-
-        // this ctor is to construct an edge whose reverse already exists - note that
-        // it calls the other base class ctor to one called by the ctor above. Also note
-        // that this is private - we only need to invoke it in the lambda above.
-        private Edge(Node from, Node to, Edge reverse, string myEdgeProp)
-            : base(from, to, reverse)
-        {
-            this.myEdgeProp = myEdgeProp;
-        }
-
-        public string MyEdgeProp
-        {
-            get => myEdgeProp;
-            set
-            {
-                myEdgeProp = value;
-                Reverse.myEdgeProp = value;
-            }
-        }
+        this.myEdgeProp = myEdgeProp;
     }
 
-    public static class Program
+    public string MyEdgeProp
     {
+        get => myEdgeProp;
+        set
+        {
+            myEdgeProp = value;
+            Reverse.myEdgeProp = value;
+        }
+    }
+}
+
+public static class Program
+{
+    ...
+
+    public static Graph<Node, Edge> MakeGraph()
+    {
+        Graph<Node, Edge> graph = new();
+
+        Node node1 = new();
+        graph.Add(node1);
+
+        Node node2 = new();
+        graph.Add(node2);
+
+        graph.Add(new Edge(node1, node2, "A"));
         ...
-
-        public static Graph<Node, Edge> MakeGraph()
-        {
-            var graph = new Graph<Node, Edge>();
-            Node node1, node2;
-            graph.Add(node1 = new Node());
-            graph.Add(node2 = new Node());
-            graph.Add(new Edge(node1, node2, "A"));
-            ...
-        }
     }
 }
 ```
@@ -113,52 +114,55 @@ Finally, here's an example with "undirected" edges with a direction-specific set
 ```csharp
 using SCGraphTheory.AdjacencyList;
 
-namespace MyUndirectedGraph2
+namespace MyUndirectedGraph2;
+
+public class Node : NodeBase<Node, Edge>
 {
-    public class Node : NodeBase<Node, Edge>
+}
+
+public class Edge : UndirectedEdgeBase<Node, Edge>
+{
+    private int myEdgeProp;
+
+    public Edge(Node from, Node to, int myEdgeProp)
+        : base(from, to, (f, t, r) => new Edge(f, t, r, -myEdgeProp))
     {
+        this.myEdgeProp = myEdgeProp;
     }
 
-    public class Edge : UndirectedEdgeBase<Node, Edge>
+    private Edge(Node from, Node to, Edge reverse, int myEdgeProp)
+        : base(from, to, reverse)
     {
-        private int myEdgeProp;
-
-        public Edge(Node from, Node to, int myEdgeProp)
-            : base(from, to, (f, t, r) => new Edge(f, t, r, -myEdgeProp))
-        {
-            this.myEdgeProp = myEdgeProp;
-        }
-
-        private Edge(Node from, Node to, Edge reverse, int myEdgeProp)
-            : base(from, to, reverse)
-        {
-            this.myEdgeProp = myEdgeProp;
-        }
-
-        public int MyEdgeProp
-        {
-            get => myEdgeProp;
-            set
-            {
-                myEdgeProp = value;
-                Reverse.myEdgeProp = -value;
-            }
-        }
+        this.myEdgeProp = myEdgeProp;
     }
 
-    public static class Program
+    public int MyEdgeProp
     {
+        get => myEdgeProp;
+        set
+        {
+            myEdgeProp = value;
+            Reverse.myEdgeProp = -value;
+        }
+    }
+}
+
+public static class Program
+{
+    ...
+
+    public static Graph<Node, Edge> MakeGraph()
+    {
+        Graph<Node, Edge> graph = new Graph<Node, Edge>();
+
+        Node node1 = new();
+        graph.Add(node1);
+
+        Node node2 = new();
+        graph.Add(node2);
+
+        graph.Add(new Edge(node1, node2, 1));
         ...
-
-        public static Graph<Node, Edge> MakeGraph()
-        {
-            var graph = new Graph<Node, Edge>();
-            Node node1, node2;
-            graph.Add(node1 = new Node());
-            graph.Add(node2 = new Node());
-            graph.Add(new Edge(node1, node2, 1));
-            ...
-        }
     }
 }
 ```
