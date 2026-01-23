@@ -73,7 +73,12 @@
 
     public ClassicSearchVisualiser()
     {
-        world = new World(20, 20);
+        world = new World(20, 20)
+        {
+            Start = (1, 10),
+            Target = (18, 10)
+        };
+        world[10, 9] = world[10, 10] = world[10, 11] = World.Terrain.Wall;
 
         paintPalette = new()
         {
@@ -138,9 +143,6 @@
         {
             Size = (sizeX, sizeY);
             graph = new WorldGraph(Size, (from, to) => from != Terrain.Wall && to != Terrain.Wall);
-
-            Start = (0, Size.Y / 2);
-            Target = (Size.X - 1, Size.Y / 2);
         }
 
         /// <summary>
@@ -177,7 +179,7 @@
         /// <summary>
         /// Gets or sets the current start position.
         /// </summary>
-        public (int X, int Y) Start
+        public required (int X, int Y) Start
         {
             get => startPosition;
             set
@@ -193,7 +195,7 @@
         /// <summary>
         /// Gets or sets the current target position.
         /// </summary>
-        public (int X, int Y) Target
+        public required (int X, int Y) Target
         {
             get => targetPosition;
             set
