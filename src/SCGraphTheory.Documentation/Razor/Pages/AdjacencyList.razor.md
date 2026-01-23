@@ -64,7 +64,7 @@ public class Edge : UndirectedEdgeBase<Node, Edge>
     // the reverse edge of this new edge - and note that it calls the other
     // constructor of this class (see below)
     public Edge(Node from, Node to, string myEdgeProp)
-        : base(from, to, (f, t, r) => new Edge(f, t, r, myEdgeProp))
+        : base(from, to, r => new(r, myEdgeProp))
     {
         this.myEdgeProp = myEdgeProp;
     }
@@ -72,8 +72,8 @@ public class Edge : UndirectedEdgeBase<Node, Edge>
     // this ctor is to construct an edge whose reverse already exists - note that
     // it calls the other base class ctor to one called by the ctor above. Also note
     // that this is private - we only need to invoke it in the lambda above.
-    private Edge(Node from, Node to, Edge reverse, string myEdgeProp)
-        : base(from, to, reverse)
+    private Edge(Edge reverse, string myEdgeProp)
+        : base(reverse)
     {
         this.myEdgeProp = myEdgeProp;
     }
@@ -125,13 +125,13 @@ public class Edge : UndirectedEdgeBase<Node, Edge>
     private int myEdgeProp;
 
     public Edge(Node from, Node to, int myEdgeProp)
-        : base(from, to, (f, t, r) => new Edge(f, t, r, -myEdgeProp))
+        : base(from, to, r => new Edge(r, -myEdgeProp))
     {
         this.myEdgeProp = myEdgeProp;
     }
 
-    private Edge(Node from, Node to, Edge reverse, int myEdgeProp)
-        : base(from, to, reverse)
+    private Edge(Edge reverse, int myEdgeProp)
+        : base(reverse)
     {
         this.myEdgeProp = myEdgeProp;
     }
