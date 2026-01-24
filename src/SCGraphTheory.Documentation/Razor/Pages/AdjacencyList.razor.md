@@ -50,7 +50,7 @@ public static class Program
 
 *\*Note that if we really wanted a single object on the heap for an undirected edge, we could probably do something with by making the actual IEdges value types that refer to the single "edge".
 The extra complexity and resulting caveats (edge structs as IEdge will be boxed, need to be careful with mutability, etc) mean that it's not something I've bothered exploring thus far.
-See the [Abstractions](abstractions) package docs for more on directedness ihn SCGraphTheory.*
+See the [Abstractions](abstractions) package docs for more on directedness in SCGraphTheory.*
 
 ```csharp
 using SCGraphTheory.AdjacencyList;
