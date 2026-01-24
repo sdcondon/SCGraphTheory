@@ -25,10 +25,10 @@ DijkstraSearch<MyNodeType, MyEdgeType> dijkstra = new(
     getEdgeCost: e => e.MyEdgeCost);
 
 AStarSearch<MyNodeType, MyEdgeType> aStar = new(
-    source: myGraph.MyNodeIndex[0, 0],
-    isTarget: n => n.Coords == targetCoords,
-    getEdgeCost: e => e.MyEdgeCost,
-    getEstimatedCostToTarget: n => EuclideanDistance(n.Coords, targetCoords));
+    source: myGraph.MyNodeIndex[sourcePosition],
+    isTarget: n => n.Position == targetPosition,
+    getEdgeCost: e => EuclideanDistance(e.From.Position, e.To.Position),
+    getEstimatedCostToTarget: n => EuclideanDistance(n.Position, targetPosition));
 ```
 
 Searches are executed step-by-step via the `NextStep()` method of the [ISearch<TNode,TEdge>](https://github.com/sdcondon/SCGraphTheory.Search/blob/main/src/Search/Classic/ISearch{TNode,TEdge}.cs) interface. This (as opposed to having to execute a search all the way to completion) is to maximise the flexibility with which potentially expensive searches can be executed. A `Complete()` extension method is defined though; which continuously calls `NextStep()` until the search completes.

@@ -4,6 +4,8 @@
 
 The SCGraphTheory.AdjacencyList NuGet package contains a mutable, in-memory adjacency list graph implementation that implements the interfaces defined in the [SCGraphTheory.Abstractions](abstractions) package, and can thus work with other packages that also use this abstraction - such as [SCGraphTheory.Search](search).
 
+As I hope you'll agree from the examples below, it's very straightforward to use, and should perform very well under search in the general case. (It always amuses me how many graph theory libs there are out there that think doing a dictionary look-up on each edge traversal is a good idea. There's none of that here - it's all direct references here).
+
 ## Usage Examples
 
 **Directed graphs** are the simplest to use.
