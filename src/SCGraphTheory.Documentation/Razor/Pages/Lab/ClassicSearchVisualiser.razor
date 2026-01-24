@@ -78,7 +78,7 @@
             Start = (1, 10),
             Target = (18, 10)
         };
-        world[10, 9] = world[10, 10] = world[10, 11] = World.Terrain.Wall;
+        world[9, 9] = world[9, 10] = world[9, 11] = World.Terrain.Wall;
 
         paintPalette = new()
         {
@@ -360,7 +360,7 @@
                 }
 
                 // Render path to target
-                if (!Equals(this.world.LatestSearch.Target, default))
+                if (world.LatestSearch.IsSucceeded)
                 {
                     foreach (var edge in this.world.LatestSearch.PathToTarget())
                     {
