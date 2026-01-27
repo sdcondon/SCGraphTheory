@@ -49,11 +49,8 @@ public static class Program
 }
 ```
 
-**Undirected graphs** take a little more effort, though there's a handy `UndirectedEdgeBase` class to do most of the work for you. `UndirectedEdgeBase` still conforms to the `IEdge<TNode, TEdge>` interface, so each undirected edge actually consists of a pair of edge objects*. Here's an example with a direction-ignorant settable edge data property:
-
-*\*Note that if we really wanted a single object on the heap for an undirected edge, we could probably do something with by making the actual IEdges value types that refer to the single "edge".
-The extra complexity and resulting caveats (edge structs as IEdge will be boxed, need to be careful with mutability, etc) mean that it's not something I've bothered exploring thus far.
-See the [Abstractions](abstractions) package docs for more on directedness in SCGraphTheory.*
+**Undirected graphs** take a *little* more effort, though there's a handy `UndirectedEdgeBase` class to do most of the work for you.
+Here's an example with a direction-ignorant settable edge data property:
 
 ```csharp
 using SCGraphTheory.AdjacencyList;
@@ -119,7 +116,13 @@ public static class Program
 }
 ```
 
-Finally, here's an example with "undirected" edges with a direction-specific edge data property (reverse edge negates the value of the property). Obviously its significant that `int` is a value type - solution would be a little more complex with a mutable reference type..
+*\*Note that `UndirectedEdgeBase` still conforms to the `IEdge<TNode, TEdge>` interface, so each undirected edge actually consists of a pair of edge objects.
+If we really wanted a single object on the heap for an undirected edge, we could probably do something with by making the actual IEdges value types that refer to the single "edge".
+The extra complexity and resulting caveats (edge structs as IEdge will be boxed, need to be careful with mutability, etc) mean that it's not something I've bothered exploring thus far.
+See the [Abstractions](abstractions) package docs for more on directedness in SCGraphTheory.*
+
+Finally, here's an example with "undirected" edges with a **direction-specific edge data property** (reverse edge negates the value of the property).
+Obviously its significant that `int` is a value type - solution would be a little more complex with a mutable reference type.
 
 ```csharp
 using SCGraphTheory.AdjacencyList;
