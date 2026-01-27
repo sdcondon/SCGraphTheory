@@ -4,13 +4,14 @@
 
 The SCGraphTheory.AdjacencyList NuGet package contains a mutable, in-memory adjacency list graph implementation that implements the interfaces defined in the [SCGraphTheory.Abstractions](abstractions) package, and can thus work with other packages that also use this abstraction - such as [SCGraphTheory.Search](search).
 
-As I hope you'll agree from the examples below, it's very straightforward to use, and should perform very well under search in the general case. (It always amuses me how many graph theory libs there are out there that think doing a dictionary look-up on each edge traversal is a good idea. There's none of that here - it's all direct references).
+As I hope you'll agree from the examples below, it's very straightforward to use, and performs very well under search in the general case. 
+All node/edge incidence determination is by direct reference - no dictionary look-ups etc.
 
 ## Usage Examples
 
 **Directed graphs** are the simplest to use.
 Create concrete node and edge classes derived from NodeBase&lt;TNode,TEdge&gt; and EdgeBase&lt;TNode,TEdge&gt; respectively, including whatever members you want.
-Then just instantiate a Graph&lt;TNode,TEdge&gt;, and add node and edge instances to it.
+Then instantiate a Graph&lt;TNode,TEdge&gt;, and `Add` node and edge instances to it.
 Here's an example with a string-valued "Label" for each node and edge:
 
 ```csharp
